@@ -1,0 +1,9 @@
+[package]
+name = "ptest"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+ctrlc = "3.5.0"
+pcap = "2.3.0"
+pnet = "0.35.0"
