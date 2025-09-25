@@ -67,4 +67,4 @@ I use C to call `libpcap` library to capture packets (test code is `sniffer.c`, 
 
 ![5](./pics/5.png)
 
-When I reviewed the pcap code, I found that the pcap_dispatch function was not called anywhere, but the pcap_loop function was used instead. I think this is the main reason for packet loss.
+When I reviewed the pcap code, I found that the `pcap_dispatch` function was not called anywhere, but the `pcap_next_ex` function was used instead. I think this is the main reason for packet loss.
