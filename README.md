@@ -61,4 +61,10 @@ We randomly select a few of the missing ports mentioned above to show. The first
 
 ![4](./pics/4.png)
 
+## Test 2
+
+I use C to call `libpcap` library to capture packets (test code is `sniffer.c`, build with `gcc sniffer.c -o sniffer -lpcap`). When I use `pcap_loop` function, packet loss occurs again. However, when I use `pcap_dispatch`, the program no longer loses packets.
+
 ![5](./pics/5.png)
+
+When I reviewed the pcap code, I found that the pcap_dispatch function was not called anywhere, but the pcap_loop function was used instead. I think this is the main reason for packet loss.
