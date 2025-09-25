@@ -53,12 +53,12 @@ But the same time, we can find these lost data from the traffic captured by `tsh
 
 We randomly select a few of the missing ports mentioned above to show. The first is the last port `65534`, and second last port `65506`, and the first port `32`, and second port `43`.
 
-![1](pics\1.png)
+![1](./pics/1.png)
 
-![2](pics\2.png)
+![2](./pics/2.png)
 
-![3](pics\3.png)
+![3](./pics/3.png)
 
-![4](pics\4.png)
+![4](./pics/4.png)
 
-![5](pics\5.png)
+![5](./pics/5.png)
