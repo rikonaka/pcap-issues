@@ -7,3 +7,4 @@ edition = "2024"
 ctrlc = "3.5.0"
 pcap = "2.3.0"
 pnet = "0.35.0"
+pcapture = { path = "../pcapture-rs", features = ["libpcap"] }

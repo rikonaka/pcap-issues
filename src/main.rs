@@ -1,6 +1,6 @@
 use ctrlc;
-use pcap::Capture;
-use pcap::Device;
+use pcap;
+use pcapture;
 use pnet::packet::Packet;
 use pnet::packet::ethernet::EtherTypes;
 use pnet::packet::ethernet::EthernetPacket;
@@ -51,19 +51,20 @@ fn show_sp_packet(data: &[u8], watch_ip: Ipv4Addr, watch_ports: &[u16]) -> Optio
     }
 }
 
-fn main() {
+#[allow(unused)]
+fn pcap_test() {
     let buffer_size = 163840;
     let snaplen = 65535;
 
     let device_name = "ens33"; // debian 13
 
-    let devices = Device::list().expect("can not get device from libpcap");
+    let devices = pcap::Device::list().expect("can not get device from libpcap");
     let device = devices
         .iter()
         .find(|&d| d.name == device_name)
         .expect("can not found interface");
 
-    let cap = Capture::from_device(device.clone()).expect("init the Capture failed");
+    let cap = pcap::Capture::from_device(device.clone()).expect("init the Capture failed");
 
     let mut cap = cap
         .buffer_size(buffer_size)
@@ -113,4 +114,48 @@ fn main() {
         }
     }
     println!("missing ports: {:?}", missing_ports);
+}
+
+#[allow(unused)]
+fn pcapture_test() {
+    let mut returned_ports = Vec::new();
+    let all_ports: Vec<u16> = (22..65535).collect();
+    let watch_ip = Ipv4Addr::new(192, 168, 5, 152);
+    let watch_ports = [22, 80, 100, 3333, 8080];
+
+    // capturing the ctrl-c signal
+    let running = Arc::new(AtomicBool::new(true));
+    let r = running.clone();
+    ctrlc::set_handler(move || {
+        println!("quitting...");
+        r.store(false, Ordering::SeqCst);
+    })
+    .expect("Error setting Ctrl-C handler");
+
+    let mut cap = pcapture::Capture::new("ens33").unwrap();
+    while running.load(Ordering::SeqCst) {
+        let packets_raw = cap.fetch_as_vec().unwrap();
+        for p in packets_raw {
+            match show_sp_packet(p, watch_ip, &watch_ports) {
+                Some(port) => {
+                    returned_ports.push(port);
+                }
+                None => (),
+            }
+        }
+    }
+
+    let mut missing_ports = Vec::new();
+    for sp in all_ports {
+        if !returned_ports.contains(&sp) {
+            missing_ports.push(sp);
+        }
+    }
+    println!("missing ports: {:?}", missing_ports);
+}
+
+fn main() {
+    // pcap_test();
+    // My pcapture library will not lose any data.
+    pcapture_test();
 }

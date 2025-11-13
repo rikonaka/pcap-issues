@@ -68,3 +68,55 @@ I use C to call `libpcap` library to capture packets (test code is `sniffer.c`, 
 ![5](./pics/5.png)
 
 When I reviewed the pcap code, I found that the `pcap_dispatch` function was not called anywhere, but the `pcap_next_ex` function was used instead. I think this is the main reason for packet loss.
+
+
+## Test 3
+
+I directly call the `libpcap` library using the Rust ffi method (my [pcapture](https://github.com/rikonaka/pcapture-rs/) lib) without losing any data.
+
+```
+pcap-issues git:(main) ✗ cargo run
+    Blocking waiting for file lock on build directory
+   Compiling cfg-if v1.0.4
+   Compiling serde_core v1.0.228
+   Compiling libc v0.2.177
+   Compiling no-std-net v0.6.0
+   Compiling libloading v0.8.9
+   Compiling bitflags v2.10.0
+   Compiling clang-sys v1.8.1
+   Compiling pcap v2.3.0
+   Compiling thiserror v2.0.17
+   Compiling num-traits v0.2.19
+   Compiling pnet_sys v0.35.0
+   Compiling unty v0.0.4
+   Compiling iana-time-zone v0.1.64
+   Compiling nix v0.30.1
+   Compiling serde v1.0.228
+   Compiling bindgen v0.72.1
+   Compiling pnet_base v0.35.0
+   Compiling ipnetwork v0.20.0
+   Compiling pnet_macros_support v0.35.0
+   Compiling pnet_packet v0.35.0
+   Compiling pnet_datalink v0.35.0
+   Compiling bincode v2.0.1
+   Compiling chrono v0.4.42
+   Compiling errno v0.2.8
+   Compiling subnetwork v0.6.5
+   Compiling pnet_transport v0.35.0
+   Compiling pnet v0.35.0
+   Compiling bitflags v1.3.2
+   Compiling byteorder v1.5.0
+   Compiling strum v0.27.2
+   Compiling ctrlc v3.5.1
+   Compiling pcapture v0.3.0 (/home/hero/pcapture-rs)
+   Compiling ptest v0.1.0 (/home/hero/pcap-issues)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 17.48s
+     Running `sudo -E target/debug/ptest`
+recv data from 192.168.5.152:22
+recv data from 192.168.5.152:80
+recv data from 192.168.5.152:8080
+recv data from 192.168.5.152:3333
+recv data from 192.168.5.152:100
+^Cquitting...
+missing ports: []
+```
